@@ -60,9 +60,11 @@ export function Accordion({
     return new Set()
   })
 
-  const expandedItems = controlledValue
-    ? new Set(Array.isArray(controlledValue) ? controlledValue : [controlledValue])
-    : internalValue
+  const expandedItems = React.useMemo(() => {
+    return controlledValue
+      ? new Set(Array.isArray(controlledValue) ? controlledValue : [controlledValue])
+      : internalValue
+  }, [controlledValue, internalValue])
 
   const toggleItem = React.useCallback(
     (value: string) => {

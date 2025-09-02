@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ummid_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ummid_se_hari
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - ummid_network
+
+  # MinIO Object Storage (S3 compatible)
+  minio:
+    image: minio/minio:latest
+    container_name: ummid_minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+    networks:
+      - ummid_network
+
+  # Mailhog for development email testing
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: ummid_mailhog
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - ummid_network
+
+  # Redis for caching and sessions
+  redis:
+    image: redis:7-alpine
+    container_name: ummid_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - ummid_network
+
+volumes:
+  postgres_data:
+  minio_data:
+  redis_data:
+
+networks:
+  ummid_network:
+    driver: bridge

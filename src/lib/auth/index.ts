@@ -1,13 +1,13 @@
 import { NextAuthOptions, getServerSession } from 'next-auth';
-// import { PrismaAdapter } from '@next-auth/prisma-adapter'
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import EmailProvider from 'next-auth/providers/email';
 import GoogleProvider from 'next-auth/providers/google';
-// import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/db'
 import { UserRole } from '@/types/auth';
 import { redirect } from 'next/navigation';
 
 export const authOptions: NextAuthOptions = {
-  // adapter: PrismaAdapter(prisma), // Commented out until Prisma is working
+  adapter: PrismaAdapter(prisma),
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -43,29 +43,29 @@ export const authOptions: NextAuthOptions = {
       }
 
       if (user) {
-        // Mock implementation until Prisma is working
-        // const dbUser = await prisma.user.findUnique({
-        //   where: { id: user.id },
-        //   select: {
-        //     id: true,
-        //     roles: true,
-        //     locale: true,
-        //     twoFAEnabled: true,
-        //   },
-        // })
+        // Get user data from database
+        const dbUser = await prisma.user.findUnique({
+          where: { id: user.id },
+          select: {
+            id: true,
+            roles: true,
+            locale: true,
+            twoFAEnabled: true,
+          },
+        })
 
-        // if (dbUser) {
-        //   token.id = dbUser.id
-        //   token.roles = dbUser.roles
-        //   token.locale = dbUser.locale
-        //   token.twoFAEnabled = dbUser.twoFAEnabled
-        // }
-
-        // Mock values
-        token.id = user.id;
-        token.roles = [UserRole.VIEWER];
-        token.locale = 'hi-IN';
-        token.twoFAEnabled = false;
+        if (dbUser) {
+          token.id = dbUser.id
+          token.roles = dbUser.roles
+          token.locale = dbUser.locale
+          token.twoFAEnabled = dbUser.twoFAEnabled
+        } else {
+          // Fallback for new users
+          token.id = user.id;
+          token.roles = [UserRole.VIEWER];
+          token.locale = 'hi-IN';
+          token.twoFAEnabled = false;
+        }
       }
 
       return token;
@@ -82,39 +82,38 @@ export const authOptions: NextAuthOptions = {
   },
   events: {
     async signIn({ user, isNewUser }) {
-      // Mock implementation until Prisma is working
-      // if (isNewUser) {
-      //   // Set default role and locale for new users
-      //   await prisma.user.update({
-      //     where: { id: user.id },
-      //     data: {
-      //       roles: [UserRole.VIEWER],
-      //       locale: process.env.NEXT_PUBLIC_DEFAULT_LOCALE || 'hi-IN',
-      //     },
-      //   })
+      // Set default role and locale for new users
+      if (isNewUser) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            roles: [UserRole.VIEWER],
+            locale: process.env.NEXT_PUBLIC_DEFAULT_LOCALE || 'hi-IN',
+          },
+        })
 
-      //   // Log user creation
-      //   await prisma.auditLog.create({
-      //     data: {
-      //       actorId: user.id,
-      //       action: 'signup',
-      //       entity: 'User',
-      //       entityId: user.id,
-      //       diffJSON: { event: 'new_user_registered' },
-      //     },
-      //   })
-      // }
+        // Log user creation
+        await prisma.auditLog.create({
+          data: {
+            actorId: user.id,
+            action: 'signup',
+            entity: 'User',
+            entityId: user.id,
+            diffJSON: { event: 'new_user_registered' },
+          },
+        })
+      }
 
-      // // Log successful sign in
-      // await prisma.auditLog.create({
-      //   data: {
-      //     actorId: user.id,
-      //     action: 'signin',
-      //     entity: 'User',
-      //     entityId: user.id,
-      //     diffJSON: { event: 'user_signin' },
-      //   },
-      // })
+      // Log successful sign in
+      await prisma.auditLog.create({
+        data: {
+          actorId: user.id,
+          action: 'signin',
+          entity: 'User',
+          entityId: user.id,
+          diffJSON: { event: 'user_signin' },
+        },
+      })
 
       console.log('User signed in:', user.id, isNewUser ? '(new user)' : '');
     },

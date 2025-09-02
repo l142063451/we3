@@ -21,6 +21,9 @@
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma migrate reset --force",
+    "backup": "tsx scripts/backup.ts backup",
+    "restore": "tsx scripts/backup.ts restore",
+    "setup": "chmod +x scripts/setup-db.sh && ./scripts/setup-db.sh",
     "prepare": "husky"
   },
   "dependencies": {
@@ -36,6 +39,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.542.0",
     "next": "^14.2.0",
     "next-auth": "^4.24.11",
     "next-intl": "^3.0.0",
