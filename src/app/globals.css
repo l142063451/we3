@@ -1,0 +1,180 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 248 250 252;
+  --foreground: 31 41 55;
+
+  --card: 255 255 255;
+  --card-foreground: 31 41 55;
+
+  --popover: 255 255 255;
+  --popover-foreground: 31 41 55;
+
+  --primary: 22 163 74;
+  --primary-foreground: 248 250 252;
+
+  --secondary: 243 244 246;
+  --secondary-foreground: 31 41 55;
+
+  --muted: 243 244 246;
+  --muted-foreground: 107 114 128;
+
+  --accent: 245 158 11;
+  --accent-foreground: 31 41 55;
+
+  --destructive: 220 38 38;
+  --destructive-foreground: 248 250 252;
+
+  --border: 229 231 235;
+  --input: 229 231 235;
+  --ring: 22 163 74;
+
+  --radius: 0.5rem;
+
+  /* Font variables - fallback to system fonts */
+  --font-inter:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue',
+    Arial, sans-serif;
+  --font-poppins:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue',
+    Arial, sans-serif;
+  --font-noto-sans-devanagari:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue',
+    Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: 15 23 42;
+    --foreground: 241 245 249;
+
+    --card: 30 41 59;
+    --card-foreground: 241 245 249;
+
+    --popover: 30 41 59;
+    --popover-foreground: 241 245 249;
+
+    --primary: 34 197 94;
+    --primary-foreground: 15 23 42;
+
+    --secondary: 51 65 85;
+    --secondary-foreground: 241 245 249;
+
+    --muted: 51 65 85;
+    --muted-foreground: 148 163 184;
+
+    --accent: 251 191 36;
+    --accent-foreground: 15 23 42;
+
+    --destructive: 239 68 68;
+    --destructive-foreground: 241 245 249;
+
+    --border: 51 65 85;
+    --input: 51 65 85;
+    --ring: 34 197 94;
+  }
+}
+
+* {
+  @apply border-border;
+}
+
+body {
+  @apply bg-background text-foreground;
+  font-feature-settings:
+    'rlig' 1,
+    'calt' 1;
+}
+
+/* Skip links for accessibility */
+.skip-link {
+  @apply sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:font-medium focus:text-primary-foreground;
+}
+
+/* Focus styles */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Custom utilities */
+@layer components {
+  .container {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .btn-secondary {
+    @apply btn bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+
+  .btn-ghost {
+    @apply btn hover:bg-accent hover:text-accent-foreground;
+  }
+
+  .card {
+    @apply rounded-lg border bg-card text-card-foreground shadow-sm;
+  }
+
+  .card-header {
+    @apply flex flex-col space-y-1.5 p-6;
+  }
+
+  .card-body {
+    @apply p-6 pt-0;
+  }
+
+  .card-footer {
+    @apply flex items-center p-6 pt-0;
+  }
+}
+
+/* Devanagari font optimization */
+[lang='hi'] {
+  font-family: var(--font-noto-sans-devanagari), var(--font-inter);
+  text-rendering: optimizeLegibility;
+}
+
+/* Ensure proper line height for mixed content */
+.mixed-script {
+  line-height: 1.75;
+}
+
+/* Loading animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Utility classes for RTL support (future enhancement) */
+.rtl {
+  direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
+}

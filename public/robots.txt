@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://ummidsehari.in/sitemap.xml
+
+# Disallow admin areas (will be protected by auth anyway)
+Disallow: /admin/
+Disallow: /api/auth/
+
+# Allow social media crawlers
+User-agent: facebookexternalhit/*
+Allow: /
+
+User-agent: Twitterbot
+Allow: /

@@ -1,0 +1,79 @@
+{
+  "name": "उम्मीद से हरी - Ummid Se Hari",
+  "short_name": "उम्मीद से हरी",
+  "description": "Smart & Carbon-Free Village PWA for Damday Gram Panchayat, Uttarakhand, India",
+  "lang": "hi-IN",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#16a34a",
+  "background_color": "#f8fafc",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["government", "utilities", "social"],
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "375x667",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "शिकायत दर्ज करें",
+      "short_name": "शिकायत",
+      "description": "File a complaint",
+      "url": "/complaints",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "परियोजनाएँ देखें",
+      "short_name": "परियोजनाएँ",
+      "description": "View projects",
+      "url": "/projects",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
