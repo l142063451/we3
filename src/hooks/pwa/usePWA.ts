@@ -11,7 +11,7 @@ interface PWAContextValue {
   pendingSync: number
   installPWA: () => void
   dismissInstallPrompt: () => void
-  addToSyncQueue: (data: any) => void
+  addToSyncQueue: (data: Record<string, unknown>) => void
   clearSyncQueue: () => void
 }
 
@@ -34,7 +34,7 @@ export const usePWA = (): PWAContextValue => {
     // Check if PWA is installed
     const checkPWAInstalled = () => {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-      const isInAppBrowser = (window.navigator as any).standalone === true
+      const isInAppBrowser = (window.navigator as { standalone?: boolean }).standalone === true
       setIsPWAInstalled(isStandalone || isInAppBrowser)
     }
 
@@ -113,7 +113,7 @@ export const usePWA = (): PWAContextValue => {
     setInstallPrompt(null)
   }
 
-  const addToSyncQueue = (data: any) => {
+  const addToSyncQueue = (data: Record<string, unknown>) => {
     try {
       const queue = JSON.parse(localStorage.getItem('pwa-sync-queue') || '[]')
       const syncItem = {
@@ -172,7 +172,7 @@ export const usePWA = (): PWAContextValue => {
 
       // Remove successfully synced items
       if (successful.length > 0) {
-        const updatedQueue = queue.filter((item: any) => !successful.includes(item.id))
+        const updatedQueue = queue.filter((item: { id: string }) => !successful.includes(item.id))
         localStorage.setItem('pwa-sync-queue', JSON.stringify(updatedQueue))
         setPendingSync(updatedQueue.length)
       }

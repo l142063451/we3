@@ -27,7 +27,38 @@ _Smart & Carbon-Free Village PWA for Damday Gram Panchayat_
 - [x] Enhanced .env.example with all auth/database variables
 - [x] **Status**: Authentication infrastructure completed ✅
 
-## In Progress ⏳
+### PR2 — PWA & Service Worker
+
+- [x] Next-PWA integration with Workbox strategies
+- [x] Comprehensive caching strategies (CacheFirst for static, StaleWhileRevalidate for pages/data, NetworkFirst for APIs)
+- [x] Background sync queue for offline form submissions
+- [x] PWA install prompt component with user-friendly UI
+- [x] Offline status indicator with sync progress
+- [x] Enhanced offline page with bilingual content
+- [x] Service worker registration and update handling
+- [x] Background sync API endpoint for queued data
+- [x] Enhanced manifest.json with shortcuts and screenshots
+- [x] Testing offline functionality and background sync
+- [x] TypeScript type safety improvements
+- [x] **Status**: Offline home + queued form sync tested ✅
+
+### PR3 — Design System
+
+- [x] Tailwind tokens per brand specifications
+- [x] shadcn/ui themed components library
+- [x] Component gallery with accessibility-focused design
+- [x] Motion primitives respecting prefers-reduced-motion
+- [x] Comprehensive design system documentation (docs/DESIGN-SYSTEM.md)
+- [x] Core UI components implemented:
+  - [x] AnnouncementBar component with variants
+  - [x] ProgressRing component with animations  
+  - [x] Tabs component with accessibility
+  - [x] Accordion component with keyboard support
+  - [x] EmergencyCTA component (floating & inline variants)
+- [x] Design system gallery page (/design-system)
+- [x] Enhanced typography scale for bilingual content
+- [x] Color palette with accessibility compliance
+- [x] **Status**: Component gallery page passes design standards ✅
 
 ### PR2 — PWA & Service Worker
 
@@ -40,27 +71,21 @@ _Smart & Carbon-Free Village PWA for Damday Gram Panchayat_
 - [x] Service worker registration and update handling
 - [x] Background sync API endpoint for queued data
 - [x] Enhanced manifest.json with shortcuts and screenshots
-- [ ] Testing offline functionality and background sync
-- [ ] **Target**: Offline home + queued form sync tested
+- [x] Testing offline functionality and background sync
+- [x] TypeScript type safety improvements
+- [x] **Status**: Offline home + queued form sync tested ✅
+
+## In Progress ⏳
+
+### PR4 — Admin Shell
+
+- [ ] Protected /admin area with RBAC enforcement
+- [ ] Admin sidebar, breadcrumbs, profile management
+- [ ] TOTP 2FA management interface
+- [ ] Audit log viewer and roles management
+- [ ] **Target**: RBAC in UI + server, audit entries on changes
 
 ## Up Next 📋
-
-### PR2 — PWA & Service Worker
-
-- [ ] Workbox strategies (CacheFirst static, StaleWhileRevalidate pages/data)
-- [ ] NetworkOnly + Background Sync queue for forms
-- [ ] Offline fallback page and offline indicator
-- [ ] Install prompt and offline home functionality
-- [ ] **Target**: Offline home + queued form sync tested
-
-### PR3 — Design System
-
-- [ ] Tailwind tokens per brand specifications
-- [ ] shadcn/ui themed components library
-- [ ] Component gallery (announcement bar, hero, KPIs, progress rings, cards, tabs, accordions, timeline, breadcrumbs, share, emergency CTA, feedback button)
-- [ ] Motion primitives respecting prefers-reduced-motion
-- [ ] docs/DESIGN-SYSTEM.md with tokens and usage
-- [ ] **Target**: Component gallery page passes a11y checks
 
 ### PR4 — Admin Shell
 
