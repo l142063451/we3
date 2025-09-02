@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import { inter, poppins, notoSansDevanagari } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
+import InstallPWAPrompt from '@/components/pwa/InstallPWAPrompt'
+import OfflineIndicator from '@/components/pwa/OfflineIndicator'
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -100,10 +102,14 @@ export default function RootLayout({
           Skip to navigation
         </a>
 
+        {/* PWA Components */}
+        <OfflineIndicator />
+        <InstallPWAPrompt />
+
         {/* Main App Structure */}
         <div className="flex min-h-screen flex-col">{children}</div>
 
-        {/* Service Worker Registration */}
+        {/* Service Worker Registration - Enhanced for PWA */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -112,12 +118,39 @@ export default function RootLayout({
                   navigator.serviceWorker.register('/sw.js')
                     .then(function(registration) {
                       console.log('SW registered: ', registration);
+                      
+                      // Check for updates
+                      registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        if (newWorker) {
+                          newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                              // New version available
+                              console.log('New version available');
+                            }
+                          });
+                        }
+                      });
                     })
                     .catch(function(registrationError) {
                       console.log('SW registration failed: ', registrationError);
                     });
                 });
               }
+              
+              // Handle PWA install prompt
+              let deferredPrompt;
+              window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                window.dispatchEvent(new CustomEvent('pwa-installable', { detail: e }));
+              });
+              
+              // Track PWA install
+              window.addEventListener('appinstalled', () => {
+                console.log('PWA was installed');
+                deferredPrompt = null;
+              });
             `,
           }}
         />

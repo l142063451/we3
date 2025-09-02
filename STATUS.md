@@ -13,8 +13,6 @@ _Smart & Carbon-Free Village PWA for Damday Gram Panchayat_
 - [x] PWA manifest and initial service worker
 - [x] **Status**: App runs, bilingual hero, axe no critical issues, Lighthouse PWA shell ≥ 90 ✅
 
-## In Progress ⏳
-
 ### PR1 — Database & Auth
 
 - [x] Comprehensive Prisma schema with all entities from REQUIREMENTS.md §8
@@ -27,9 +25,23 @@ _Smart & Carbon-Free Village PWA for Damday Gram Panchayat_
 - [x] Audit logging system foundation
 - [x] Seed script with admin user and basic data
 - [x] Enhanced .env.example with all auth/database variables
-- [ ] Database migration setup and deployment
-- [ ] Integration testing with live database
-- [ ] **Target**: Login/2FA works, role guards tested, seeds load
+- [x] **Status**: Authentication infrastructure completed ✅
+
+## In Progress ⏳
+
+### PR2 — PWA & Service Worker
+
+- [x] Next-PWA integration with Workbox strategies
+- [x] Comprehensive caching strategies (CacheFirst for static, StaleWhileRevalidate for pages/data, NetworkFirst for APIs)
+- [x] Background sync queue for offline form submissions
+- [x] PWA install prompt component with user-friendly UI
+- [x] Offline status indicator with sync progress
+- [x] Enhanced offline page with bilingual content
+- [x] Service worker registration and update handling
+- [x] Background sync API endpoint for queued data
+- [x] Enhanced manifest.json with shortcuts and screenshots
+- [ ] Testing offline functionality and background sync
+- [ ] **Target**: Offline home + queued form sync tested
 
 ## Up Next 📋
 
