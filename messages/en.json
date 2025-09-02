@@ -1,0 +1,61 @@
+{
+  "app": {
+    "title": "Ummid Se Hari | Damday Gram Panchayat",
+    "description": "Smart & Carbon-Free Village - Damday Gram Panchayat"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About Village",
+    "governance": "Gram Panchayat & Governance",
+    "mission": "Smart & Carbon-Free Mission",
+    "schemes": "Schemes & Benefits",
+    "services": "Services & Requests",
+    "projects": "Projects & Budget",
+    "news": "News, Notices & Events",
+    "directory": "Directory & Economy",
+    "health": "Health, Education & Social",
+    "tourism": "Tourism & Culture",
+    "volunteer": "Volunteer & Donate",
+    "data": "Open Data & Reports",
+    "contact": "Contact & Help",
+    "account": "Account"
+  },
+  "hero": {
+    "title": "Ummid Se Hari",
+    "subtitle": "Smart, Clean and Empowered Damday",
+    "description": "Transforming Damday-Chuanala into a smart, green, carbon-conscious model village by inspiring action and enabling transparent, participatory governance.",
+    "cta": {
+      "complaint": "File a Complaint",
+      "eligibility": "Check Eligibility",
+      "pledge": "Take a Green Pledge",
+      "projects": "View Projects"
+    }
+  },
+  "accessibility": {
+    "skipToContent": "Skip to main content",
+    "skipToNavigation": "Skip to navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "toggleLanguage": "Toggle language"
+  },
+  "language": {
+    "hindi": "हिंदी",
+    "english": "English",
+    "switchTo": "Switch language to:"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "submit": "Submit",
+    "close": "Close",
+    "open": "Open",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "yes": "Yes",
+    "no": "No"
+  }
+}
