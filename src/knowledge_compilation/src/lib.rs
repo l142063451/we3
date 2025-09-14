@@ -1,17 +1,22 @@
-//! # Knowledge Compilation Library
+//! # Knowledge Compilation Library  
 //!
-//! High-performance implementation of knowledge compilation techniques for 
-//! Boolean function representations, including d-DNNF, SDD, and OBDD compilation.
+//! Advanced implementation of knowledge compilation techniques for Boolean function
+//! representations, including d-DNNF, BDD, ZDD, and SDD compilation with structured
+//! decomposition algorithms and polynomial-time query operations.
 //!
-//! This library provides efficient compilation of CNF formulas to tractable
-//! representations that support polynomial-time queries.
+//! This library provides production-ready compilation of CNF formulas to tractable
+//! representations that support efficient model counting, satisfiability checking,
+//! and probabilistic inference.
 
-use std::collections::{HashMap, BTreeSet};
+use std::collections::{HashMap, BTreeSet, HashSet};
 
 pub mod cnf;
 pub mod dnnf;
 pub mod sdd;
+pub mod bdd;
+pub mod zdd;
 pub mod queries;
+pub mod compilation;
 
 /// Represents a Boolean variable
 pub type Variable = u32;
