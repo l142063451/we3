@@ -1,0 +1,29 @@
+[package]
+name = "tensor_networks"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Tensor network implementations with TT/MPS decompositions"
+
+[dependencies]
+ndarray.workspace = true
+nalgebra.workspace = true
+num.workspace = true
+rayon.workspace = true
+serde.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true
+criterion.workspace = true
+approx.workspace = true
+
+[[bench]]
+name = "tensor_contraction"
+harness = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
