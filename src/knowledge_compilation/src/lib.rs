@@ -161,4 +161,62 @@ mod tests {
         
         assert_eq!(cnf.count_models_naive(), 4); // All assignments satisfy tautology
     }
+    
+    #[test]
+    fn test_dnnf_compilation() {
+        let mut cnf = CNFFormula::new(2);
+        
+        // Simple satisfiable formula: (x1)
+        let mut clause = Clause::new();
+        clause.insert(Literal::positive(0));
+        cnf.add_clause(clause);
+        
+        let dnnf = crate::dnnf::DNNF::from_cnf(&cnf);
+        
+        // Should be satisfiable
+        assert!(dnnf.is_satisfiable());
+        
+        // Should have some models
+        let models = dnnf.enumerate_models();
+        assert!(!models.is_empty());
+        
+        // Debug print for analysis
+        println!("CNF: {:?}", cnf);
+        println!("DNNF: {:?}", dnnf);
+        println!("Models: {:?}", models);
+        
+        // Check that all enumerated models actually satisfy the original CNF
+        for model in &models {
+            println!("Checking model: {:?}", model);
+            if !cnf.is_satisfied(model) {
+                println!("Model does not satisfy CNF!");
+                // Create a more complete assignment for testing
+                let mut complete_model = model.clone();
+                // Add missing variables with default values
+                for var in 0..cnf.num_variables {
+                    if !complete_model.contains_key(&(var as Variable)) {
+                        complete_model.insert(var as Variable, false);
+                    }
+                }
+                println!("Complete model: {:?}", complete_model);
+                assert!(cnf.is_satisfied(&complete_model), "Even complete model doesn't satisfy CNF");
+            }
+        }
+    }
+    
+    #[test]
+    fn test_dnnf_model_counting() {
+        let mut cnf = CNFFormula::new(1);
+        
+        // Simple: just x1
+        let mut clause = Clause::new();
+        clause.insert(Literal::positive(0));
+        cnf.add_clause(clause);
+        
+        let dnnf = crate::dnnf::DNNF::from_cnf(&cnf);
+        
+        // For 1 variable with constraint x1=true, should have exactly 1 model
+        // (x1=true satisfies, x1=false doesn't)
+        assert_eq!(dnnf.count_models(), 1);
+    }
 }
