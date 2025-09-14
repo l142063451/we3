@@ -77,4 +77,3 @@ testpaths = ["python/tests"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "--cov=we3 --cov-report=html --cov-report=term-missing"
