@@ -18,7 +18,7 @@ repository = "https://github.com/l142063451/we3"
 [workspace.dependencies]
 # Core mathematical libraries
 num = "0.4"
-num-complex = "0.4"
+num-complex = { version = "0.4", features = ["serde"] }
 num-traits = "0.2"
 nalgebra = "0.32"
 ndarray = "0.15"

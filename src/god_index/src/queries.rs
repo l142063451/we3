@@ -263,8 +263,8 @@ pub enum QueryResult {
 /// Query optimization engine
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct QueryOptimizer {
-    /// Query execution statistics
-    pub query_stats: HashMap<QueryType, QueryStatistics>,
+    /// Query execution statistics by query name/type
+    pub query_stats: HashMap<String, QueryStatistics>,
     
     /// Query plan cache
     pub plan_cache: HashMap<QueryId, QueryPlan>,
@@ -413,7 +413,8 @@ impl QueryOptimizer {
 
     /// Update query execution statistics
     fn update_statistics(&mut self, query: &Query) {
-        let stats = self.query_stats.entry(query.query_type.clone()).or_insert_with(|| QueryStatistics {
+        let query_type_key = format!("{:?}", query.query_type);
+        let stats = self.query_stats.entry(query_type_key).or_insert_with(|| QueryStatistics {
             total_executions: 0,
             average_execution_time: std::time::Duration::from_nanos(0),
             cache_hit_rate: 0.0,

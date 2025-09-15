@@ -1,13 +1,12 @@
 //! Error types for the God-Index system
 
 use thiserror::Error;
-use serde::{Serialize, Deserialize};
 
 /// Result type for God-Index operations
 pub type GIResult<T> = Result<T, GIError>;
 
 /// Comprehensive error types for God-Index operations
-#[derive(Debug, Clone, Error, Serialize, Deserialize)]
+#[derive(Debug, Clone, Error)]
 pub enum GIError {
     #[error("Mathematical family not found")]
     FamilyNotFound,
@@ -33,8 +32,8 @@ pub enum GIError {
     #[error("Index out of bounds: {index} >= {bound}")]
     IndexOutOfBounds { index: u64, bound: u64 },
     
-    #[error("Incompatible family types: {source} and {target}")]
-    IncompatibleFamilyTypes { source: String, target: String },
+    #[error("Incompatible family types: {0} and {1}")]
+    IncompatibleFamilyTypes(String, String),
     
     #[error("Mathematical computation error: {0}")]
     ComputationError(String),

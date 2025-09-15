@@ -708,7 +708,7 @@ impl StructuredFamily {
 }
 
 /// Family-specific performance metrics
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FamilyMetrics {
     pub average_query_time: std::time::Duration,
     pub hotspot_analysis: Option<HotspotAnalysis>,
@@ -716,14 +716,14 @@ pub struct FamilyMetrics {
 }
 
 /// Analysis of frequently accessed objects
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HotspotAnalysis {
     pub most_accessed_objects: Vec<u64>,
     pub access_frequency_distribution: HashMap<u64, u32>,
 }
 
 /// Result of family optimization
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FamilyOptimization {
     pub cache_additions: u32,
     pub index_restructuring: bool,

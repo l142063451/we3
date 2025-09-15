@@ -231,10 +231,10 @@ impl IndexMapping {
         // Verify compatibility between family types
         let compatible = Self::verify_compatibility(&source_family.family_type, &target_family.family_type)?;
         if !compatible {
-            return Err(GIError::IncompatibleFamilyTypes {
-                source: format!("{:?}", source_family.family_type),
-                target: format!("{:?}", target_family.family_type),
-            });
+            return Err(GIError::IncompatibleFamilyTypes(
+                format!("{:?}", source_family.family_type),
+                format!("{:?}", target_family.family_type),
+            ));
         }
 
         // Create appropriate mapping function based on family types and mapping type

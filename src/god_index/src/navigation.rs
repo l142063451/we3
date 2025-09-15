@@ -27,7 +27,7 @@ pub struct NavigationGraph {
 }
 
 /// Unique identifier for navigation nodes
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct NodeId(pub u64);
 
 /// Unique identifier for navigation edges
@@ -95,7 +95,7 @@ pub struct NavigationEdge {
 }
 
 /// Types of navigation relationships
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum NavigationRelation {
     /// Hierarchical parent-child relationship
     ParentChild,
@@ -291,7 +291,7 @@ impl NavigationGraph {
             if let Some(node) = self.nodes.get(&node_id) {
                 match &node.content {
                     NodeContent::Object(obj_id) => result.push(*obj_id),
-                    NodeContent::Collection { objects } => result.extend(objects.iter()),
+                    NodeContent::Collection { objects } => result.extend(objects.iter().copied()),
                     _ => {} // Skip family and concept nodes
                 }
             }
@@ -553,7 +553,7 @@ impl NavigationGraph {
                         if distance <= radius {
                             match &node.content {
                                 NodeContent::Object(obj_id) => neighbors.push(*obj_id),
-                                NodeContent::Collection { objects } => neighbors.extend(objects.iter()),
+                                NodeContent::Collection { objects } => neighbors.extend(objects.iter().copied()),
                                 _ => {}
                             }
                         }
