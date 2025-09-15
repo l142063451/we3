@@ -15,10 +15,10 @@ num-rational.workspace = true
 nalgebra.workspace = true
 ndarray.workspace = true
 approx.workspace = true
-rug.workspace = true
-rayon.workspace = true
+rug = { workspace = true, optional = true }
+rayon = { workspace = true, optional = true }
 crossbeam.workspace = true
-tokio.workspace = true
+tokio = { workspace = true, optional = true }
 async-trait.workspace = true
 bitvec.workspace = true
 smallvec.workspace = true
