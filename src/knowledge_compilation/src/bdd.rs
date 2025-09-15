@@ -307,10 +307,13 @@ impl BDD {
                 let v1_pos = self.variable_order.iter().position(|&x| x == v1).unwrap_or(usize::MAX);
                 let v2_pos = self.variable_order.iter().position(|&x| x == v2).unwrap_or(usize::MAX);
                 
-                if v1_pos <= v2_pos {
+                if v1_pos < v2_pos {
                     (v1, n1.low, n1.high, node2, node2)
-                } else {
+                } else if v2_pos < v1_pos {
                     (v2, node1, node1, n2.low, n2.high)
+                } else {
+                    // Same variable - split on both
+                    (v1, n1.low, n1.high, n2.low, n2.high)
                 }
             }
             (Some(v1), None) => (v1, n1.low, n1.high, node2, node2),
@@ -507,15 +510,23 @@ impl BDD {
         
         if let Some(terminal_val) = n.terminal_value {
             if terminal_val {
-                let remaining_vars = self.variable_order.len() - depth;
+                let remaining_vars = if self.variable_order.len() > depth {
+                    self.variable_order.len() - depth
+                } else {
+                    0
+                };
                 return 2u64.pow(remaining_vars as u32);
             } else {
                 return 0;
             }
         }
         
-        let low_models = self.count_models_recursive(n.low, depth + 1);
-        let high_models = self.count_models_recursive(n.high, depth + 1);
+        // Get the current variable level
+        let current_var = n.variable.unwrap();
+        let var_level = self.variable_order.iter().position(|&x| x == current_var).unwrap_or(depth);
+        
+        let low_models = self.count_models_recursive(n.low, var_level + 1);
+        let high_models = self.count_models_recursive(n.high, var_level + 1);
         
         low_models + high_models
     }

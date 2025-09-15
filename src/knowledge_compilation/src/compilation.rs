@@ -192,8 +192,8 @@ impl KnowledgeCompiler {
         // Subsumption elimination
         self.subsumption_elimination(&mut processed);
         
-        // Variable elimination (limited)
-        self.bounded_variable_elimination(&mut processed, 10);
+        // Variable elimination (limited) - disabled for now to avoid overly aggressive simplification
+        // self.bounded_variable_elimination(&mut processed, 10);
         
         Ok(processed)
     }
@@ -449,7 +449,11 @@ impl KnowledgeCompiler {
             }
         }
         
-        let total_pairs = variables.len() * (variables.len() - 1) / 2;
+        let total_pairs = if variables.len() <= 1 {
+            1  // Avoid division by zero and subtraction underflow
+        } else {
+            variables.len() * (variables.len() - 1) / 2
+        };
         let interacting_pairs = var_interactions.len();
         
         // Structured if less than 70% of variable pairs interact
