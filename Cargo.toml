@@ -4,7 +4,8 @@ members = [
     "src/generating_functions",
     "src/tensor_networks", 
     "src/knowledge_compilation",
-    "src/idv_bits"
+    "src/idv_bits",
+    "src/god_index"
 ]
 
 [workspace.package]
