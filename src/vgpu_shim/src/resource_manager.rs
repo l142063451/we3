@@ -289,7 +289,15 @@ impl ResourceManager {
         
         // Update memory pool
         self.memory_pool.write().resize(max_memory as usize)?;
+        
+        // Note: total_memory is immutable, but in a real implementation 
+        // this would be updated. For now, we'll handle this in collect_current_metrics
         Ok(())
+    }
+
+    /// Get maximum memory limit
+    pub fn get_max_memory(&self) -> u64 {
+        self.total_memory
     }
 
     /// Allocate GPU memory with advanced placement algorithms

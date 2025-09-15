@@ -66,6 +66,7 @@ pub struct MonitoringConfig {
     pub enable_power_monitoring: bool,
     pub enable_detailed_counters: bool,
     pub alert_thresholds: AlertThresholds,
+    pub max_memory_bytes: u64,
 }
 
 /// Alert thresholds for performance monitoring
@@ -187,6 +188,19 @@ impl PerformanceMonitor {
         })
     }
 
+    /// Create a new performance monitor with custom configuration
+    pub fn with_config(config: MonitoringConfig) -> Result<Self> {
+        Ok(Self {
+            current_metrics: Arc::new(RwLock::new(GpuMetrics::default())),
+            metrics_history: Arc::new(RwLock::new(VecDeque::with_capacity(config.history_size))),
+            config,
+            counters: Arc::new(RwLock::new(PerformanceCounters::new())),
+            thermal_monitor: Arc::new(RwLock::new(ThermalMonitor::new())),
+            power_monitor: Arc::new(RwLock::new(PowerMonitor::new())),
+            is_monitoring: Arc::new(RwLock::new(false)),
+        })
+    }
+
     /// Start performance monitoring
     pub async fn start_monitoring(&self) -> Result<()> {
         *self.is_monitoring.write() = true;
@@ -218,6 +232,7 @@ impl PerformanceMonitor {
         let is_monitoring = self.is_monitoring.clone();
         let sampling_interval = self.config.sampling_interval;
         let history_size = self.config.history_size;
+        let max_memory_bytes = self.config.max_memory_bytes;
         
         tokio::spawn(async move {
             let mut interval_timer = interval(sampling_interval);
@@ -226,7 +241,11 @@ impl PerformanceMonitor {
                 interval_timer.tick().await;
                 
                 // Collect current metrics
-                let metrics = Self::collect_current_metrics().await;
+                let mut metrics = Self::collect_current_metrics().await;
+                
+                // Update monitoring state and configuration to reflect actual status
+                metrics.is_monitoring_active = *is_monitoring.read();
+                metrics.max_memory_bytes = max_memory_bytes;
                 
                 // Update current metrics
                 *current_metrics.write() = metrics.clone();
@@ -649,6 +668,7 @@ impl Default for MonitoringConfig {
             enable_power_monitoring: true,
             enable_detailed_counters: true,
             alert_thresholds: AlertThresholds::default(),
+            max_memory_bytes: 8 * 1024 * 1024 * 1024, // 8GB default
         }
     }
 }
@@ -888,15 +908,12 @@ mod tests {
 
     #[test]
     fn test_alert_checking() {
-        let mut config = MonitoringConfig::default();
-        config.alert_thresholds.max_temperature = 50.0; // Low threshold for testing
-        
         let monitor = PerformanceMonitor::new().unwrap();
         
-        // Simulate high temperature
+        // Simulate high temperature above default threshold (85.0°C)
         {
             let mut metrics = monitor.current_metrics.write();
-            metrics.temperature = 60.0; // Above threshold
+            metrics.temperature = 90.0; // Above default threshold of 85.0°C
         }
         
         let alerts = monitor.check_alerts();
