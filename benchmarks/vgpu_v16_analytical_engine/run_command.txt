@@ -1,0 +1,1 @@
+python3 -m real_hardware_verification --test vgpu_v16_analytical_engine --hardware-check
