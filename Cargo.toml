@@ -9,6 +9,7 @@ members = [
     "src/hybrid_verifier",
     "src/vgpu_shim",
     "src/experimental_framework",
+    "src/formal_proofs",
 ]
 
 [workspace.package]

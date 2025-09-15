@@ -1,0 +1,56 @@
+[package]
+name = "formal_proofs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+thiserror = "1.0"
+uuid = { version = "1.0", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+dashmap = "5.0"
+parking_lot = "0.12"
+crossbeam = "0.8"
+regex = "1.5"
+nom = "7.0"
+pest = "2.5"
+pest_derive = "2.5"
+tempfile = "3.0"
+async-trait = "0.1"
+rand = { version = "0.8", features = ["std_rng"] }
+clap = { version = "4.0", features = ["derive"] }
+env_logger = "0.10"
+
+# Mathematical computation
+num = "0.4"
+num-complex = { version = "0.4", features = ["serde"] }
+num-traits = "0.2"
+nalgebra = "0.32"
+approx = "0.5"
+
+# WE3 framework dependencies  
+generating_functions = { path = "../generating_functions" }
+knowledge_compilation = { path = "../knowledge_compilation" }
+tensor_networks = { path = "../tensor_networks" }
+idv_bits = { path = "../idv_bits" }
+god_index = { path = "../god_index" }
+hybrid_verifier = { path = "../hybrid_verifier" }
+
+[dev-dependencies]
+tokio-test = "0.4"
+criterion = "0.5"
+
+[[bin]]
+name = "formal_prover"
+path = "src/bin/formal_prover.rs"
+
+[[bin]]
+name = "lean_interface"
+path = "src/bin/lean_interface.rs"
+
+[[bin]]
+name = "coq_interface"
+path = "src/bin/coq_interface.rs"
