@@ -7,3 +7,4 @@ description = "Comprehensive validation framework for vGPU v1.4+"
 [dependencies]
 tokio.workspace = true
 vgpu-core-v14 = { path = "../core" }
+vgpu-universal-solver = { path = "../universal_solver" }

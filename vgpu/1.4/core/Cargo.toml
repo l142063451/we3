@@ -9,3 +9,4 @@ tokio.workspace = true
 async-trait.workspace = true
 vgpu-infinite-computing = { path = "../infinite_computing" }
 vgpu-universal-solver = { path = "../universal_solver" }
+chrono = { version = "0.4", features = ["serde"] }

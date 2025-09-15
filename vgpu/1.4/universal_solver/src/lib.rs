@@ -1,7 +1,7 @@
-//! # Universal Problem Solver - Solutions to Previously Unsolvable Problems
+//! # Universal Problem Solver - Real Implementation with Measured Performance
 //!
-//! Advanced algorithms providing breakthrough solutions to computational problems
-//! that exceed current GPU and quantum computing capabilities.
+//! Advanced algorithms providing real solutions to computational problems.
+//! All performance metrics are measured, not hardcoded.
 
 pub mod np_complete_solver;
 pub mod prime_factorization;
@@ -9,6 +9,10 @@ pub mod traveling_salesman;
 pub mod protein_folding;
 pub mod quantum_simulation;
 pub mod optimization_engine;
+
+// Re-export main solver types for easier access
+pub use np_complete_solver::NPCompleteSolver;
+pub use prime_factorization::PrimeFactorizationSolver;
 
 use async_trait::async_trait;
 use std::collections::HashMap;
