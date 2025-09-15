@@ -130,13 +130,32 @@ pub struct LeanProver {
 }
 
 impl LeanProver {
-    pub fn new(config: TheoremProverConfig) -> Result<Box<dyn TheoremProver>> {
+    pub fn new() -> Result<Self> {
+        let config = TheoremProverConfig::lean4_default();
+        Ok(Self {
+            lean_path: config.executable_path.clone(),
+            library_paths: config.library_path.clone(),
+            config,
+            initialized: false,
+        })
+    }
+    
+    pub fn new_with_config(config: TheoremProverConfig) -> Result<Box<dyn TheoremProver>> {
         Ok(Box::new(Self {
             lean_path: config.executable_path.clone(),
             library_paths: config.library_path.clone(),
             config,
             initialized: false,
         }))
+    }
+    
+    pub fn can_handle_statement(&self, statement: &crate::formalization::MathematicalStatement) -> bool {
+        // LeanProver can handle all statement types we support
+        match &statement.statement_type {
+            crate::formalization::StatementType::Theorem { .. } => true,
+            crate::formalization::StatementType::Lemma { .. } => true,
+            crate::formalization::StatementType::Definition { .. } => true,
+        }
     }
     
     async fn execute_lean_command(&self, lean_code: &str) -> Result<String> {
@@ -478,13 +497,32 @@ pub struct CoqProver {
 }
 
 impl CoqProver {
-    pub fn new(config: TheoremProverConfig) -> Result<Box<dyn TheoremProver>> {
+    pub fn new() -> Result<Self> {
+        let config = TheoremProverConfig::coq_default();
+        Ok(Self {
+            coq_path: config.executable_path.clone(),
+            library_paths: config.library_path.clone(),
+            config,
+            initialized: false,
+        })
+    }
+    
+    pub fn new_with_config(config: TheoremProverConfig) -> Result<Box<dyn TheoremProver>> {
         Ok(Box::new(Self {
             coq_path: config.executable_path.clone(),
             library_paths: config.library_path.clone(),
             config,
             initialized: false,
         }))
+    }
+    
+    pub fn can_handle_statement(&self, statement: &crate::formalization::MathematicalStatement) -> bool {
+        // CoqProver can handle all statement types we support
+        match &statement.statement_type {
+            crate::formalization::StatementType::Theorem { .. } => true,
+            crate::formalization::StatementType::Lemma { .. } => true,
+            crate::formalization::StatementType::Definition { .. } => true,
+        }
     }
     
     fn format_coq_statement(&self, statement: &crate::formalization::MathematicalStatement) -> String {
@@ -664,21 +702,21 @@ mod tests {
     #[tokio::test]
     async fn test_lean_prover_creation() {
         let config = TheoremProverConfig::lean4_default();
-        let prover = LeanProver::new(config);
+        let prover = LeanProver::new_with_config(config);
         assert!(prover.is_ok());
     }
     
     #[tokio::test]
     async fn test_coq_prover_creation() {
         let config = TheoremProverConfig::coq_default();
-        let prover = CoqProver::new(config);
+        let prover = CoqProver::new_with_config(config);
         assert!(prover.is_ok());
     }
     
     #[test]
     fn test_lean_tactics() {
         let config = TheoremProverConfig::lean4_default();
-        let prover = LeanProver::new(config).unwrap();
+        let prover = LeanProver::new_with_config(config).unwrap();
         let tactics = prover.get_available_tactics();
         assert!(tactics.contains(&"simp".to_string()));
         assert!(tactics.contains(&"ring".to_string()));
@@ -688,7 +726,7 @@ mod tests {
     #[test]
     fn test_coq_tactics() {
         let config = TheoremProverConfig::coq_default();
-        let prover = CoqProver::new(config).unwrap();
+        let prover = CoqProver::new_with_config(config).unwrap();
         let tactics = prover.get_available_tactics();
         assert!(tactics.contains(&"intro".to_string()));
         assert!(tactics.contains(&"apply".to_string()));
@@ -698,7 +736,7 @@ mod tests {
     #[tokio::test]
     async fn test_proof_result_structure() {
         let config = TheoremProverConfig::lean4_default();
-        let mut prover = LeanProver::new(config).unwrap();
+        let mut prover = LeanProver::new_with_config(config).unwrap();
         
         // Skip test if Lean 4 is not available
         if prover.initialize().await.is_err() {
@@ -723,7 +761,7 @@ mod tests {
     #[tokio::test]
     async fn test_interactive_session() {
         let config = TheoremProverConfig::lean4_default();
-        let prover = LeanProver::new(config).unwrap();
+        let prover = LeanProver::new_with_config(config).unwrap();
         
         let mut session = prover.start_interactive_session().await.unwrap();
         

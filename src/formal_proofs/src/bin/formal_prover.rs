@@ -12,6 +12,7 @@ use formal_proofs::{
     formalization::{MathematicalStatement, LemmaDatabase},
     proof_search::{ProofSearchEngine, SearchStrategy},
     interactive::InteractiveProofSession,
+    theorem_prover::TheoremProver,
 };
 use std::path::PathBuf;
 use tokio::io::{self, AsyncBufReadExt, BufReader};
@@ -449,14 +450,16 @@ async fn check_status(_proof_system: &FormalProofSystem) -> Result<()> {
     println!("Theorem provers:");
     
     let lean_config = TheoremProverConfig::lean4_default();
-    if let Ok(prover) = formal_proofs::theorem_prover::LeanProver::new(lean_config) {
-        let available = prover.is_available().await.unwrap_or(false);
+    if let Ok(prover) = formal_proofs::theorem_prover::LeanProver::new() {
+        let boxed_prover: Box<dyn TheoremProver> = Box::new(prover);
+        let available = boxed_prover.is_available().await.unwrap_or(false);
         println!("  Lean 4: {}", if available { "✅ Available" } else { "❌ Not available" });
     }
     
     let coq_config = TheoremProverConfig::coq_default();
-    if let Ok(prover) = formal_proofs::theorem_prover::CoqProver::new(coq_config) {
-        let available = prover.is_available().await.unwrap_or(false);
+    if let Ok(prover) = formal_proofs::theorem_prover::CoqProver::new() {
+        let boxed_prover: Box<dyn TheoremProver> = Box::new(prover);
+        let available = boxed_prover.is_available().await.unwrap_or(false);
         println!("  Coq: {}", if available { "✅ Available" } else { "❌ Not available" });
     }
     
