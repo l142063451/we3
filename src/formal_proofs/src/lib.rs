@@ -206,7 +206,7 @@ pub struct FormalProofSystem {
 impl FormalProofSystem {
     /// Create new formal proof system
     pub fn new(config: ProofSystemConfig) -> Result<Self> {
-        let theorem_provers: std::collections::HashMap<String, String> = std::collections::HashMap::new();
+        let _theorem_provers: std::collections::HashMap<String, String> = std::collections::HashMap::new();
         let certificate_store = verification::CertificateStore::new(&config.certificate_storage)?;
         let lemma_database = formalization::LemmaDatabase::new(&config.lemma_database)?;
         
@@ -230,7 +230,7 @@ impl FormalProofSystem {
     
     /// Prove a mathematical statement
     pub async fn prove_statement(
-        &self,
+        &mut self,
         statement: &formalization::MathematicalStatement,
     ) -> Result<ProofCertificate> {
         // Create a basic proof result for now
@@ -255,7 +255,7 @@ impl FormalProofSystem {
     
     /// Verify mathematical framework properties
     pub async fn verify_framework_properties(
-        &self,
+        &mut self,
         framework: &str,
     ) -> Result<Vec<ProofCertificate>> {
         let properties = self.get_framework_properties(framework)?;

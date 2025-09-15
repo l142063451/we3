@@ -452,8 +452,8 @@ impl ProofSearchEngine {
     
     fn resolution_search(&self, initial: ProofNode, start_time: Instant) -> Result<SearchResult> {
         // Simplified resolution-based search
-        let mut nodes_explored = 1;
-        let mut proof_path = vec![initial.clone()];
+        let nodes_explored = 1;
+        let proof_path = vec![initial.clone()];
         
         // Simulate resolution proof
         if initial.goals.len() == 1 {
@@ -764,7 +764,7 @@ mod tests {
         let node = ProofNode::new(goals);
         
         let heuristic = engine.compute_heuristic(&node);
-        assert!(heuristic > 0.0);
+        assert!(heuristic > 0);
     }
     
     #[test]

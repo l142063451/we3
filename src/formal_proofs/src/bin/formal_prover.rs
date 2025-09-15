@@ -95,7 +95,7 @@ async fn main() -> Result<()> {
             run_interactive_mode(statement).await?;
         },
         Commands::Prove { statement, prover, strategy } => {
-            prove_statement(&proof_system, &statement, &prover, &strategy).await?;
+            prove_statement(&mut proof_system, &statement, &prover, &strategy).await?;
         },
         Commands::Verify { certificate, level } => {
             verify_certificate(&proof_system, &certificate, &level).await?;
@@ -270,9 +270,9 @@ fn print_proof_state(session: &InteractiveProofSession) {
 }
 
 async fn prove_statement(
-    proof_system: &FormalProofSystem,
+    proof_system: &mut FormalProofSystem,
     statement_str: &str,
-    prover: &str,
+    _prover: &str,
     strategy: &str,
 ) -> Result<()> {
     println!("🎯 Proving statement: {}", statement_str);
@@ -441,7 +441,7 @@ async fn list_provers() -> Result<()> {
     Ok(())
 }
 
-async fn check_status(proof_system: &FormalProofSystem) -> Result<()> {
+async fn check_status(_proof_system: &FormalProofSystem) -> Result<()> {
     println!("🩺 System Status");
     println!("─────────────────");
     
@@ -482,7 +482,11 @@ fn parse_statement(statement: &str, framework: &str) -> Result<MathematicalState
             
             if stmt.contains("→") || stmt.contains("->") {
                 // Implication
-                let impl_parts: Vec<&str> = stmt.split("→").or_else(|| stmt.split("->")).collect();
+                let impl_parts: Vec<&str> = if stmt.contains("→") {
+                    stmt.split("→").collect()
+                } else {
+                    stmt.split("->").collect()
+                };
                 if impl_parts.len() == 2 {
                     return Ok(MathematicalStatement::theorem(
                         &name,

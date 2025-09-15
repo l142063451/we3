@@ -761,7 +761,7 @@ mod tests {
         
         match substituted {
             LogicalExpression::Implies(premise, _) => {
-                assert_eq!(**premise, LogicalExpression::atom("P"));
+                assert_eq!(*premise, LogicalExpression::atom("P"));
             },
             _ => panic!("Expected implication"),
         }

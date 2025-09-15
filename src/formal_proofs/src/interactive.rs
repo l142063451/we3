@@ -74,7 +74,12 @@ impl InteractiveProofSession {
         let tactic = self.find_tactic(tactic_name)?;
         
         let old_state = self.current_proof_state.clone();
-        let result = self.execute_tactic(&tactic, args, &mut self.current_proof_state).await?;
+        let mut proof_state_copy = self.current_proof_state.clone();
+        let result = self.execute_tactic(&tactic, args, &mut proof_state_copy).await?;
+        
+        if result.success {
+            self.current_proof_state = proof_state_copy;
+        }
         
         if result.success {
             self.save_proof_state_snapshot(&format!("after_{}", tactic_name)).await;
@@ -261,7 +266,7 @@ impl InteractiveProofSession {
                 } else {
                     // Replace current goal with new subgoals
                     proof_state.goals.retain(|g| g.id != current_goal_id);
-                    proof_state.goals.extend(new_goals);
+                    proof_state.goals.extend(new_goals.clone());
                 }
                 
                 // Update current goal
@@ -568,7 +573,7 @@ impl ProofAssistant {
     
     /// Create new proof session
     pub async fn create_session(&mut self) -> Uuid {
-        let mut session = InteractiveProofSession::new();
+        let session = InteractiveProofSession::new();
         let session_id = session.session_id;
         self.active_sessions.insert(session_id, session);
         session_id
@@ -755,7 +760,7 @@ mod tests {
         assert_ne!(initial_state.goals.len(), after_intro_state.goals.len());
         
         session.undo().await.unwrap();
-        let after_undo_state = session.get_proof_state().clone();
+        let _after_undo_state = session.get_proof_state().clone();
         
         // Note: Due to implementation details, we check history length instead
         assert!(session.proof_state_history.len() >= 1);

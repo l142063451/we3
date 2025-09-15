@@ -150,7 +150,10 @@ impl LeanProver {
         let output = Command::new(&self.lean_path)
             .arg("--check")
             .arg(&lean_file)
-            .env("LEAN_PATH", &self.library_paths.join(":"))
+            .env("LEAN_PATH", &self.library_paths.iter()
+                .map(|p| p.to_string_lossy())
+                .collect::<Vec<_>>()
+                .join(":"))
             .output()?;
         
         if output.status.success() {
