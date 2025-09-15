@@ -1,0 +1,9 @@
+[package]
+name = "vgpu-quantum-transcendence"
+version = "1.4.0"
+edition = "2021"
+description = "Beyond-quantum computing capabilities"
+
+[dependencies]
+tokio.workspace = true
+async-trait.workspace = true

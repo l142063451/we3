@@ -1,0 +1,9 @@
+[package]
+name = "vgpu-breakthrough-engines"
+version = "1.4.0"
+edition = "2021"
+description = "Breakthrough computational engines for novel solution methodologies"
+
+[dependencies]
+tokio.workspace = true
+async-trait.workspace = true

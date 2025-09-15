@@ -1,0 +1,9 @@
+[package]
+name = "vgpu-tests-v14"
+version = "1.4.0"
+edition = "2021"
+description = "Comprehensive validation framework for vGPU v1.4+"
+
+[dependencies]
+tokio.workspace = true
+vgpu-core-v14 = { path = "../core" }

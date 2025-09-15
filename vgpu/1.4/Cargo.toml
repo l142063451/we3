@@ -1,0 +1,51 @@
+[workspace]
+members = [
+    "infinite_computing",
+    "universal_solver",
+    "breakthrough_engines",
+    "quantum_transcendence", 
+    "hybrid_intelligence",
+    "core",
+    "api_intercept",
+    "installer",
+    "tests"
+]
+
+[workspace.dependencies]
+tokio = { version = "1.0", features = ["full"] }
+async-trait = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+thiserror = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+uuid = { version = "1.0", features = ["v4"] }
+rayon = "1.7"
+crossbeam = "0.8"
+parking_lot = "0.12"
+dashmap = "5.0"
+ndarray = { version = "0.15", features = ["rayon"] }
+nalgebra = "0.32"
+rustfft = "6.1"
+statrs = "0.16"
+rand = "0.8"
+rand_distr = "0.4"
+num-complex = "0.4"
+num-traits = "0.2"
+num-bigint = "0.4"
+itertools = "0.12"
+regex = "1.0"
+petgraph = "0.6"
+bitvec = "1.0"
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[profile.dev]
+opt-level = 1
+debug = true

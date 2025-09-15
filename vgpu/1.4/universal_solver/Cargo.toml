@@ -1,0 +1,18 @@
+[package]
+name = "vgpu-universal-solver"
+version = "1.4.0"
+edition = "2021"
+description = "Universal problem solving algorithms for previously unsolvable computational challenges"
+
+[dependencies]
+tokio.workspace = true
+async-trait.workspace = true
+serde.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+rayon.workspace = true
+ndarray.workspace = true
+petgraph.workspace = true
+rand.workspace = true
+num-bigint.workspace = true
+num-complex.workspace = true

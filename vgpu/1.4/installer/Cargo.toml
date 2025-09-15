@@ -1,0 +1,9 @@
+[package]
+name = "vgpu-installer-v14"
+version = "1.4.0"
+edition = "2021"
+description = "Production deployment system for vGPU v1.4+"
+
+[dependencies]
+tokio.workspace = true
+serde.workspace = true

@@ -1,0 +1,11 @@
+[package]
+name = "vgpu-core-v14"
+version = "1.4.0"
+edition = "2021"
+description = "Core vGPU v1.4+ infrastructure"
+
+[dependencies]
+tokio.workspace = true
+async-trait.workspace = true
+vgpu-infinite-computing = { path = "../infinite_computing" }
+vgpu-universal-solver = { path = "../universal_solver" }
