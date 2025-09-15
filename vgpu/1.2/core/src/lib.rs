@@ -14,11 +14,13 @@ pub mod memory;
 pub mod scheduler;
 pub mod math_engine;
 pub mod device;
+pub mod readiness_assessment;
 
 pub use memory::*;
 pub use scheduler::*;
 pub use math_engine::*;
 pub use device::*;
+pub use readiness_assessment::*;
 
 /// Core vGPU Framework - Advanced Mathematical Computing Engine
 pub struct VirtualGPU {
