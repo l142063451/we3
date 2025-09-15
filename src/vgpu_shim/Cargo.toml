@@ -1,0 +1,64 @@
+[package]
+name = "vgpu_shim"
+version = "0.1.0"
+edition = "2021"
+authors = ["WE3 Research Team"]
+description = "vGPU User-Space Shim & API Interposer - Advanced GPU Virtualization Framework"
+license = "MIT"
+
+[dependencies]
+# Core dependencies from workspace
+num = { workspace = true }
+num-complex = { workspace = true }
+num-traits = { workspace = true }
+nalgebra = { workspace = true }
+ndarray = { workspace = true }
+approx = { workspace = true }
+
+# Performance and parallelization
+rayon = { workspace = true }
+crossbeam = { workspace = true }
+
+# Bit manipulation
+bitvec = { workspace = true }
+smallvec = { workspace = true }
+
+# Random number generation  
+rand = { workspace = true }
+
+# Low-level operations
+libm = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+
+# System-level dependencies for vGPU operations
+libc = "0.2"
+memmap2 = "0.9"
+shared_memory = "0.12"
+parking_lot = "0.12"
+dashmap = "5.5"
+tokio = { version = "1.0", features = ["full"] }
+futures = "0.3"
+
+# Low-level GPU libraries (mock interfaces for user-space)
+wgpu = "0.19"  # WebGPU for cross-platform GPU access
+bytemuck = "1.14"
+
+[dev-dependencies]
+proptest = { workspace = true }
+criterion = { workspace = true }
+tokio-test = "0.4"
+
+[[bench]]
+name = "vgpu_performance"
+harness = false
+
+[lib]
+name = "vgpu_shim"
+crate-type = ["lib", "cdylib"]
