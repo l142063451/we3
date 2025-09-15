@@ -3,7 +3,8 @@ resolver = "2"
 members = [
     "src/generating_functions",
     "src/tensor_networks", 
-    "src/knowledge_compilation"
+    "src/knowledge_compilation",
+    "src/idv_bits"
 ]
 
 [workspace.package]
@@ -17,6 +18,7 @@ repository = "https://github.com/l142063451/we3"
 # Core mathematical libraries
 num = "0.4"
 num-complex = "0.4"
+num-traits = "0.2"
 nalgebra = "0.32"
 ndarray = "0.15"
 approx = "0.5"
@@ -24,6 +26,16 @@ approx = "0.5"
 # Performance and parallelization
 rayon = "1.8"
 crossbeam = "0.8"
+
+# Bit manipulation
+bitvec = "1.0"
+smallvec = "1.11"
+
+# Random number generation
+rand = "0.8"
+
+# Low-level math functions
+libm = "0.2"
 
 # Python bindings
 pyo3 = { version = "0.20", features = ["extension-module"] }

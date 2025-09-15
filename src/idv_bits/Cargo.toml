@@ -1,0 +1,28 @@
+[package]
+name = "idv_bits"
+version = "0.1.0"
+edition = "2021"
+description = "Infinite-Density Vector Bit abstractions and conversion algorithms"
+authors = ["WE3 Research Team"]
+
+[dependencies]
+num-complex = { workspace = true }
+num-traits = { workspace = true }
+ndarray = { workspace = true }
+rayon = { workspace = true }
+serde = { workspace = true }
+rand = { workspace = true }
+bitvec = { workspace = true }
+smallvec = { workspace = true }
+libm = { workspace = true }
+
+[dev-dependencies]
+criterion = { workspace = true }
+proptest = { workspace = true }
+
+[[bench]]
+name = "idv_operations"
+harness = false
+
+[lib]
+crate-type = ["rlib"]
