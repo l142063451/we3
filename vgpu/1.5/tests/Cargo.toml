@@ -1,0 +1,15 @@
+[package]
+name = "vgpu-tests-v15"
+version = "1.5.0"
+edition = "2021"
+
+[[bin]]
+name = "vgpu-tests-v15"
+path = "src/main.rs"
+
+[[bin]]
+name = "vgpu-advanced-demo"
+path = "src/advanced_demo.rs"
+
+[dependencies]
+tokio = { workspace = true, features = ["full"] }

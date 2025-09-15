@@ -1,0 +1,6 @@
+[package]
+name = "vgpu-advanced-mathematical-cores"
+version = "1.5.0"
+edition = "2021"
+
+[dependencies]

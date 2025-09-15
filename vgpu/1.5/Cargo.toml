@@ -1,0 +1,41 @@
+[workspace]
+members = [
+    "infinite_computing",
+    "near_infinite_engines", 
+    "multi_dimensional_processing",
+    "advanced_mathematical_cores",
+    "quantum_transcendence_v2",
+    "universal_ai_training",
+    "cryptographic_supercomputing", 
+    "rendering_infinity",
+    "bandwidth_revolution",
+    "tests"
+]
+
+[workspace.dependencies]
+tokio = { version = "1.0", features = ["full"] }
+async-trait = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+nalgebra = "0.32"
+ndarray = "0.15" 
+rustfft = "6.0"
+num-complex = "0.4"
+rayon = "1.0"
+crossbeam = "0.8"
+dashmap = "5.0"
+parking_lot = "0.12"
+thiserror = "1.0"
+anyhow = "1.0"
+tracing = "0.1"
+rand = "0.8"
+rand_distr = "0.4"
+statrs = "0.16"
+itertools = "0.12"
+bitvec = "1.0"
+bytemuck = "1.0"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
