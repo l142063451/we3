@@ -10,6 +10,7 @@ members = [
     "src/vgpu_shim",
     "src/experimental_framework",
     "src/formal_proofs",
+    "src/publication_prep",
 ]
 
 [workspace.package]
