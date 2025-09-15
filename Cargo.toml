@@ -5,7 +5,8 @@ members = [
     "src/tensor_networks", 
     "src/knowledge_compilation",
     "src/idv_bits",
-    "src/god_index"
+    "src/god_index",
+    "src/hybrid_verifier",
 ]
 
 [workspace.package]

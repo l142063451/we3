@@ -1,0 +1,56 @@
+[package]
+name = "hybrid_verifier"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+# Core mathematical libraries
+num.workspace = true
+num-complex.workspace = true
+num-traits.workspace = true
+nalgebra.workspace = true
+ndarray.workspace = true
+approx.workspace = true
+
+# Performance and parallelization
+rayon.workspace = true
+crossbeam.workspace = true
+
+# Bit manipulation  
+bitvec.workspace = true
+smallvec.workspace = true
+
+# Random number generation
+rand.workspace = true
+
+# System information
+num_cpus = "1.16"
+
+# Low-level math functions
+libm.workspace = true
+
+# Serialization
+serde.workspace = true
+serde_json.workspace = true
+
+# Error handling
+anyhow.workspace = true
+thiserror.workspace = true
+
+# Local workspace dependencies
+generating_functions = { path = "../generating_functions" }
+tensor_networks = { path = "../tensor_networks" }
+knowledge_compilation = { path = "../knowledge_compilation" }
+idv_bits = { path = "../idv_bits" }
+god_index = { path = "../god_index" }
+
+[dev-dependencies]
+proptest.workspace = true
+criterion.workspace = true
+
+[[bench]]
+name = "hybrid_performance"
+harness = false
