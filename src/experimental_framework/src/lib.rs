@@ -36,40 +36,57 @@ large-scale experiments and benchmarks on the WE3 mathematical frameworks.
 ```rust
 use experimental_framework::BenchmarkSuite;
 
+// Create a benchmark suite configuration
 let suite = BenchmarkSuite::new()
     .add_framework_benchmarks()
     .add_scaling_experiments()
     .add_memory_profiling();
-    
-let results = suite.run_all().await?;
+
+// Suite can be executed with tokio runtime
+// let results = suite.run_all().await?;
 ```
 
 ### Custom Experiment Design
 ```rust
 use experimental_framework::ExperimentBuilder;
+use experimental_framework::experiments::{ParameterValue, Framework};
 
+// Configure experimental parameters
 let experiment = ExperimentBuilder::new("custom_gf_scaling")
-    .parameter("polynomial_degree", vec![10, 100, 1000, 10000])
-    .parameter("precision", vec![1e-6, 1e-9, 1e-12])
-    .framework("generating_functions")
+    .parameter("polynomial_degree", vec![
+        ParameterValue::Integer(10), 
+        ParameterValue::Integer(100), 
+        ParameterValue::Integer(1000), 
+        ParameterValue::Integer(10000)
+    ])
+    .parameter("precision", vec![
+        ParameterValue::Float(1e-6), 
+        ParameterValue::Float(1e-9), 
+        ParameterValue::Float(1e-12)
+    ])
+    .framework(Framework::GeneratingFunctions)
     .repetitions(100)
     .build();
     
-let results = experiment.execute().await?;
+// Execute with: let results = experiment.execute().await?;
 ```
 
 ### Data Analysis Pipeline
 ```rust
 use experimental_framework::AnalysisPipeline;
 
-let analysis = AnalysisPipeline::new()
-    .load_experiment_results("experiment_20241228_*")
-    .statistical_analysis()
-    .regression_modeling()
-    .visualization("scaling_plots")
-    .report_generation();
-    
-analysis.execute().await?;
+// Create analysis pipeline
+let mut pipeline = AnalysisPipeline::new();
+
+// Chain analysis operations - each returns Result<&mut Self>
+// let analysis = pipeline
+//     .load_experiment_results("experiment_20241228_*")?
+//     .statistical_analysis()?
+//     .regression_modeling()?
+//     .visualization("scaling_plots")?
+//     .report_generation()?;
+// 
+// Execute with: analysis.execute().await?;
 ```
 
 ## Experimental Design Principles
