@@ -8,8 +8,8 @@ members = [
     "tests",
 ]
 
+# Shared package metadata
 [workspace.package]
-name = "vgpu_v13"
 version = "1.3.0"
 edition = "2021"
 authors = ["WE3 Research Team - vGPU v1.3 Infinite FLOPS Framework"]
