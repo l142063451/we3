@@ -815,8 +815,17 @@ mod tests {
         let uniform_entropy = ops.entropy(&uniform, 2).unwrap();
         let constant_entropy = ops.entropy(&constant, 2).unwrap();
         
-        // Uniform should have higher entropy than constant
-        assert!(uniform_entropy > constant_entropy);
+        // For block size 2: alternating pattern has blocks [01, 01, 01, 01] -> 1 unique pattern
+        // constant pattern has blocks [11, 11, 11, 11] -> 1 unique pattern
+        // Both have entropy = 0. Let's use block size 1 instead for better discrimination
+        let uniform_entropy_1 = ops.entropy(&uniform, 1).unwrap();
+        let constant_entropy_1 = ops.entropy(&constant, 1).unwrap();
+        
+        // Block size 1: alternating has [0, 1, 0, 1, 0, 1, 0, 1] -> 2 patterns (50% each) -> entropy = 1
+        // constant has [1, 1, 1, 1, 1, 1, 1, 1] -> 1 pattern (100%) -> entropy = 0
+        assert!(uniform_entropy_1 > constant_entropy_1);
+        assert_eq!(uniform_entropy_1, 1.0); // Maximum entropy for binary
+        assert_eq!(constant_entropy_1, 0.0); // No entropy
     }
 
     #[test]

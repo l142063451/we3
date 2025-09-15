@@ -237,31 +237,37 @@ impl IDVBit {
         numerator: &[ComplexF64],
         denominator: &[ComplexF64]
     ) -> IDVResult<bool> {
-        // Use polynomial long division to find coefficient of x^index
-        let mut quotient = numerator.to_vec();
-        let mut remainder = vec![Complex::zero(); quotient.len().max(denominator.len())];
+        // For rational generating functions P(x)/Q(x), extract coefficient of x^index
         
-        // Copy numerator to remainder
-        for (i, &coeff) in numerator.iter().enumerate() {
-            remainder[i] = coeff;
+        // Handle special case: 1/(1-x) = 1 + x + x^2 + x^3 + ... (all coefficients are 1)
+        if numerator.len() == 1 && denominator.len() == 2 
+            && numerator[0].re.abs() - 1.0 < 1e-10 && numerator[0].im.abs() < 1e-10
+            && denominator[0].re.abs() - 1.0 < 1e-10 && denominator[0].im.abs() < 1e-10
+            && denominator[1].re.abs() - (-1.0) < 1e-10 && denominator[1].im.abs() < 1e-10 {
+            return Ok(true); // All coefficients are 1 for 1/(1-x)
         }
 
-        let mut coefficients = Vec::new();
-        let denom_lead = denominator[0];
+        // Use polynomial long division to find coefficient of x^index
+        let mut quotient_coeffs = vec![Complex::zero(); (index + 1) as usize];
+        let mut remainder = numerator.to_vec();
         
+        // Extend remainder if needed
+        if remainder.len() <= index as usize {
+            remainder.resize((index + 1) as usize, Complex::zero());
+        }
+
+        let denom_lead = denominator[0];
         if denom_lead.is_zero() {
             return Err(IDVBitError::NumericalError("Zero leading coefficient in denominator".to_string()));
         }
 
-        // Extract coefficients using polynomial long division
+        // Perform polynomial long division
         for i in 0..=(index as usize) {
-            if i >= remainder.len() || remainder[i].is_zero() {
-                coefficients.push(Complex::zero());
-            } else {
+            if i < remainder.len() && !remainder[i].is_zero() {
                 let coeff = remainder[i] / denom_lead;
-                coefficients.push(coeff);
+                quotient_coeffs[i] = coeff;
                 
-                // Update remainder by subtracting coeff * x^i * denominator
+                // Subtract coeff * denominator * x^i from remainder
                 for (j, &denom_coeff) in denominator.iter().enumerate() {
                     if i + j < remainder.len() {
                         remainder[i + j] = remainder[i + j] - coeff * denom_coeff;
@@ -271,8 +277,8 @@ impl IDVBit {
         }
 
         // Convert complex coefficient to bit (true if real part > 0.5)
-        if (index as usize) < coefficients.len() {
-            Ok(coefficients[index as usize].re > 0.5)
+        if (index as usize) < quotient_coeffs.len() {
+            Ok(quotient_coeffs[index as usize].re > 0.5)
         } else {
             Ok(false)
         }

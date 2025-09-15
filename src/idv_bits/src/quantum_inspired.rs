@@ -544,7 +544,8 @@ impl QuantumIDVProcessor {
         use bitvec::prelude::*;
         let length = noisy_state.length().unwrap_or(1000) as usize;
         let corrected_length = (length / 3) * 3; // Ensure multiple of 3
-        let mut corrected_bits = bitvec![0; corrected_length];
+        let logical_bits = corrected_length / 3; // Each group of 3 becomes 1 logical bit
+        let mut corrected_bits = bitvec![0; logical_bits];
         
         for i in (0..corrected_length).step_by(3) {
             let bit0 = noisy_state.get_bit(i as u64).unwrap_or(false);
