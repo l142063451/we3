@@ -13,7 +13,7 @@ use std::time::{Duration, Instant};
 /// Security and isolation management system
 pub struct SecurityManager {
     // Security configuration
-    isolation_level: SecurityLevel,
+    isolation_level: Arc<RwLock<SecurityLevel>>,
     
     // Execution contexts
     contexts: Arc<RwLock<HashMap<u64, ExecutionContext>>>,
@@ -115,7 +115,7 @@ pub struct AccessControlMatrix {
 }
 
 /// Security operations
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Operation {
     Read,
     Write,
@@ -147,7 +147,7 @@ pub struct SecurityPolicies {
 }
 
 /// Audit event for security logging
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct AuditEvent {
     pub event_id: u64,
     pub timestamp: Instant,
@@ -282,7 +282,7 @@ impl SecurityManager {
     /// Create a new security manager
     pub fn new() -> Result<Self> {
         Ok(Self {
-            isolation_level: SecurityLevel::Moderate,
+            isolation_level: Arc::new(RwLock::new(SecurityLevel::Moderate)),
             contexts: Arc::new(RwLock::new(HashMap::new())),
             access_control: Arc::new(RwLock::new(AccessControlMatrix::new())),
             resource_limits: Arc::new(RwLock::new(HashMap::new())),
@@ -294,7 +294,7 @@ impl SecurityManager {
 
     /// Set isolation level
     pub fn set_isolation_level(&self, level: SecurityLevel) -> Result<()> {
-        self.isolation_level = level;
+        *self.isolation_level.write() = level;
         
         // Update existing contexts
         let mut contexts = self.contexts.write();
@@ -320,7 +320,7 @@ impl SecurityManager {
             context_id,
             user_id: user_id.to_string(),
             application_id: application_id.to_string(),
-            isolation_level: self.isolation_level,
+            isolation_level: *self.isolation_level.read(),
             allowed_resources: self.determine_allowed_resources(user_id)?,
             resource_quotas: self.get_resource_quotas(user_id)?,
             permissions: self.get_user_permissions(user_id)?,
@@ -330,7 +330,7 @@ impl SecurityManager {
         };
 
         // Apply isolation
-        self.apply_isolation_level(&context, self.isolation_level)?;
+        self.apply_isolation_level(&context, *self.isolation_level.read())?;
         
         // Store context
         self.contexts.write().insert(context_id, context);
@@ -729,7 +729,7 @@ impl Default for SecurityPolicies {
             audit_all_operations: true,
             prevent_sandbox_escape: true,
             enable_threat_detection: true,
-            max_context_lifetime: Duration::from_hours(24),
+            max_context_lifetime: Duration::from_secs(24 * 60 * 60),
             automatic_cleanup: true,
         }
     }
@@ -826,7 +826,7 @@ mod tests {
         let security_manager = SecurityManager::new().unwrap();
         
         security_manager.set_isolation_level(SecurityLevel::High).unwrap();
-        assert_eq!(security_manager.isolation_level, SecurityLevel::High);
+        assert_eq!(*security_manager.isolation_level.read(), SecurityLevel::High);
     }
 
     #[test]

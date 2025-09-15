@@ -8,6 +8,7 @@ members = [
     "src/god_index",
     "src/hybrid_verifier",
     "src/vgpu_shim",
+    "src/experimental_framework",
 ]
 
 [workspace.package]

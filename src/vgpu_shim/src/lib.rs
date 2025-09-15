@@ -153,7 +153,7 @@ impl Default for VGpuConfig {
 }
 
 /// Security isolation levels
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum SecurityLevel {
     Minimal,   // Basic resource limits
     Moderate,  // Process isolation and resource limits

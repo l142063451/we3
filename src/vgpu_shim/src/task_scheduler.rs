@@ -30,7 +30,7 @@ pub struct TaskScheduler {
     metrics: Arc<RwLock<SchedulerMetrics>>,
     
     // Task submission channel
-    task_sender: Option<mpsc::UnboundedSender<TaskSubmission>>,
+    task_sender: Arc<RwLock<Option<mpsc::UnboundedSender<TaskSubmission>>>>,
     
     // Scheduling algorithms
     algorithms: SchedulingAlgorithms,
@@ -43,7 +43,7 @@ pub struct TaskScheduler {
 }
 
 /// GPU task representation
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct GpuTask {
     pub task_id: u64,
     pub kernel_name: String,
@@ -350,7 +350,7 @@ impl TaskScheduler {
             active_tasks: Arc::new(RwLock::new(HashMap::new())),
             config: SchedulerConfig::default(),
             metrics: Arc::new(RwLock::new(SchedulerMetrics::new())),
-            task_sender: None,
+            task_sender: Arc::new(RwLock::new(None)),
             algorithms: SchedulingAlgorithms::new(),
             predictor: ResourcePredictor::new(),
             load_balancer: LoadBalancer::new(),
@@ -369,14 +369,17 @@ impl TaskScheduler {
     }
 
     /// Start the scheduler's background task management
-    pub async fn start(&mut self) -> Result<()> {
+    pub async fn start(&self) -> Result<()> {
         let (sender, mut receiver) = mpsc::unbounded_channel::<TaskSubmission>();
-        self.task_sender = Some(sender);
+        *self.task_sender.write() = Some(sender);
 
         // Initialize priority queues
-        for priority in [crate::resource_manager::Priority::Low, crate::resource_manager::Priority::Normal, 
-                        crate::resource_manager::Priority::High, crate::resource_manager::Priority::Critical] {
-            self.priority_queues.write().insert(priority, VecDeque::new());
+        {
+            let mut queues = self.priority_queues.write();
+            for priority in [crate::resource_manager::Priority::Low, crate::resource_manager::Priority::Normal, 
+                            crate::resource_manager::Priority::High, crate::resource_manager::Priority::Critical] {
+                queues.insert(priority, VecDeque::new());
+            }
         }
 
         // Spawn scheduler main loop
@@ -429,7 +432,12 @@ impl TaskScheduler {
 
     /// Submit a task for execution
     pub async fn submit(&self, task: GpuTask) -> Result<()> {
-        if let Some(sender) = &self.task_sender {
+        let sender = {
+            let task_sender_guard = self.task_sender.read();
+            task_sender_guard.clone()
+        };
+        
+        if let Some(sender) = sender {
             let (response_sender, response_receiver) = oneshot::channel();
             
             let submission = TaskSubmission {
@@ -509,15 +517,26 @@ impl TaskScheduler {
         config: &SchedulerConfig,
         metrics: &Arc<RwLock<SchedulerMetrics>>,
     ) {
-        let mut queues = priority_queues.write();
-        
         // Schedule from highest priority to lowest
         for priority in [crate::resource_manager::Priority::Critical, crate::resource_manager::Priority::High, crate::resource_manager::Priority::Normal, crate::resource_manager::Priority::Low] {
-            if let Some(queue) = queues.get_mut(&priority) {
-                while !queue.is_empty() && active_tasks.read().len() < config.max_concurrent_tasks {
-                    if let Some(task) = queue.pop_front() {
-                        Self::execute_task(task, active_tasks, metrics).await;
+            loop {
+                let task_to_execute = {
+                    let mut queues = priority_queues.write();
+                    if let Some(queue) = queues.get_mut(&priority) {
+                        if !queue.is_empty() && active_tasks.read().len() < config.max_concurrent_tasks {
+                            queue.pop_front()
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
                     }
+                };
+                
+                if let Some(task) = task_to_execute {
+                    Self::execute_task(task, active_tasks, metrics).await;
+                } else {
+                    break;
                 }
             }
         }
@@ -531,24 +550,27 @@ impl TaskScheduler {
         metrics: &Arc<RwLock<SchedulerMetrics>>,
     ) {
         // Collect all tasks with deadlines
-        let mut deadline_tasks = Vec::new();
-        let mut queues = priority_queues.write();
-        
-        for queue in queues.values_mut() {
-            let mut i = 0;
-            while i < queue.len() {
-                if queue[i].deadline.is_some() {
-                    deadline_tasks.push(queue.remove(i).unwrap());
-                } else {
-                    i += 1;
+        let deadline_tasks = {
+            let mut deadline_tasks = Vec::new();
+            let mut queues = priority_queues.write();
+            
+            for queue in queues.values_mut() {
+                let mut i = 0;
+                while i < queue.len() {
+                    if queue[i].deadline.is_some() {
+                        deadline_tasks.push(queue.remove(i).unwrap());
+                    } else {
+                        i += 1;
+                    }
                 }
             }
-        }
+            
+            // Sort by deadline (earliest first)
+            deadline_tasks.sort_by_key(|task| task.deadline.unwrap_or(Instant::now()));
+            deadline_tasks
+        };
         
-        // Sort by deadline (earliest first)
-        deadline_tasks.sort_by_key(|task| task.deadline.unwrap_or(Instant::now()));
-        
-        // Execute tasks in deadline order
+        // Execute tasks in deadline order  
         for task in deadline_tasks {
             if active_tasks.read().len() < config.max_concurrent_tasks {
                 Self::execute_task(task, active_tasks, metrics).await;
@@ -560,6 +582,7 @@ impl TaskScheduler {
                     TaskPriority::Normal => crate::resource_manager::Priority::Normal,
                     TaskPriority::Low | TaskPriority::Background => crate::resource_manager::Priority::Low,
                 };
+                let mut queues = priority_queues.write();
                 if let Some(queue) = queues.get_mut(&priority) {
                     queue.push_front(task);
                 }
@@ -581,8 +604,6 @@ impl TaskScheduler {
             return;
         }
 
-        let mut queues = priority_queues.write();
-        
         // Allocate capacity based on priority weights
         let critical_share = (total_capacity * 50 / 100).max(1);
         let high_share = (total_capacity * 30 / 100).max(1);
@@ -597,13 +618,24 @@ impl TaskScheduler {
         ];
 
         for (priority, allocation) in allocations {
-            if let Some(queue) = queues.get_mut(&priority) {
-                let mut scheduled = 0;
-                while scheduled < allocation && !queue.is_empty() {
-                    if let Some(task) = queue.pop_front() {
-                        Self::execute_task(task, active_tasks, metrics).await;
-                        scheduled += 1;
+            for _ in 0..allocation {
+                let task_to_execute = {
+                    let mut queues = priority_queues.write();
+                    if let Some(queue) = queues.get_mut(&priority) {
+                        if !queue.is_empty() {
+                            queue.pop_front()
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
                     }
+                };
+                
+                if let Some(task) = task_to_execute {
+                    Self::execute_task(task, active_tasks, metrics).await;
+                } else {
+                    break;
                 }
             }
         }

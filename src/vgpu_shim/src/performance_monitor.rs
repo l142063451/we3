@@ -36,7 +36,7 @@ pub struct PerformanceMonitor {
 }
 
 /// GPU performance metrics
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct GpuMetrics {
     pub timestamp: Instant,
     pub compute_utilization: f64,        // 0.0 to 1.0
@@ -258,8 +258,8 @@ impl PerformanceMonitor {
                 
                 {
                     let mut monitor = thermal_monitor.write();
-                    monitor.update_temperatures().await;
-                    monitor.apply_thermal_management().await;
+                    monitor.update_temperatures();
+                    monitor.apply_thermal_management();
                 } // Drop the lock before continuing the loop
             }
         });
@@ -280,8 +280,8 @@ impl PerformanceMonitor {
                 
                 {
                     let mut monitor = power_monitor.write();
-                    monitor.update_power_measurements().await;
-                    monitor.optimize_power_efficiency().await;
+                    monitor.update_power_measurements();
+                    monitor.optimize_power_efficiency();
                 } // Drop the lock before continuing the loop
             }
         });
@@ -466,7 +466,11 @@ impl PerformanceMonitor {
             max_power: power_usage.iter().fold(0.0, |a, &b| a.max(b)),
             thermal_throttling_events: self.counters.read().thermal_throttling_events,
             power_throttling_events: self.counters.read().power_throttling_events,
-            uptime: history.last().unwrap().timestamp.duration_since(history.first().unwrap().timestamp),
+            uptime: if let (Some(last), Some(first)) = (history.back(), history.front()) {
+                last.timestamp.duration_since(first.timestamp)
+            } else {
+                Duration::from_secs(0)
+            },
         }
     }
 
@@ -702,7 +706,7 @@ impl ThermalMonitor {
         }
     }
 
-    async fn update_temperatures(&mut self) {
+    fn update_temperatures(&mut self) {
         // Simulate temperature readings from different zones
         for (zone, temp) in &mut self.thermal_zones {
             let noise = (rand::random::<f64>() - 0.5) * 2.0; // ±1°C noise
@@ -728,7 +732,7 @@ impl ThermalMonitor {
         }
     }
 
-    async fn apply_thermal_management(&mut self) {
+    fn apply_thermal_management(&mut self) {
         let critical_temp = 85.0;
         
         if self.current_temperature > critical_temp && !self.throttling_active {
@@ -759,7 +763,7 @@ impl PowerMonitor {
         }
     }
 
-    async fn update_power_measurements(&mut self) {
+    fn update_power_measurements(&mut self) {
         // Update power measurements for each rail
         let mut total_power = 0.0;
         
@@ -795,7 +799,7 @@ impl PowerMonitor {
         }
     }
 
-    async fn optimize_power_efficiency(&mut self) {
+    fn optimize_power_efficiency(&mut self) {
         // Simple power efficiency calculation
         let operations = 1000000.0; // Simulate 1M operations/sec
         self.power_efficiency = operations / self.current_power;

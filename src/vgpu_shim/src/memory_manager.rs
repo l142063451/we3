@@ -37,7 +37,7 @@ pub struct MemoryManager {
 }
 
 /// GPU memory block representation
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct GpuMemoryBlock {
     pub block_id: u64,
     pub address: u64,
@@ -70,9 +70,9 @@ pub enum AccessPattern {
     Strided { stride: usize },    // Regular stride
     Temporal { period: Duration }, // Temporal locality
     Spatial { radius: usize },    // Spatial locality
-    Write_Once,                   // Write once, read many
-    Read_Heavy,                   // Read-heavy workload
-    Write_Heavy,                  // Write-heavy workload
+    WriteOnce,                   // Write once, read many
+    ReadHeavy,                   // Read-heavy workload
+    WriteHeavy,                  // Write-heavy workload
 }
 
 /// Memory allocation classes for pooling
@@ -360,7 +360,7 @@ impl MemoryManager {
             PrefetchStrategy::NextLine => {
                 // Prefetch next cache line
                 let cache_line_size = 128; // 128 bytes
-                let next_line = ((address / cache_line_size) + 1) * cache_line_size;
+                let next_line = ((address / cache_line_size as u64) + 1) * cache_line_size as u64;
                 self.cache_data(next_line, cache_line_size)
             },
             PrefetchStrategy::Sequential { distance } => {

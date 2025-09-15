@@ -40,7 +40,7 @@ pub struct InterceptedFunction {
 }
 
 /// Types of GPU APIs
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum ApiType {
     CUDA,
     OpenCL,
@@ -51,7 +51,7 @@ pub enum ApiType {
 }
 
 /// Intercepted API call record
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct InterceptedCall {
     pub call_id: u64,
     pub function_name: String,

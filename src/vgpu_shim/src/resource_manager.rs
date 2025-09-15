@@ -35,7 +35,7 @@ pub struct ResourceManager {
 }
 
 /// Resource allocation tracking
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct ResourceAllocation {
     pub allocation_id: u64,
     pub resource_type: ResourceType,
@@ -61,7 +61,7 @@ pub enum ResourceType {
 }
 
 /// Resource priority levels
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum Priority {
     Low = 1,
     Normal = 2,
