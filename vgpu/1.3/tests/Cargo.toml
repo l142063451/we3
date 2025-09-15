@@ -1,0 +1,23 @@
+[package]
+name = "vgpu_tests"
+version = "1.3.0"
+edition = "2021"
+authors = ["WE3 Research Team"]
+description = "Comprehensive test suite for vGPU v1.3"
+
+[dependencies]
+# Use workspace dependencies
+tokio.workspace = true
+serde.workspace = true
+anyhow.workspace = true
+criterion.workspace = true
+proptest.workspace = true
+
+# vGPU modules
+vgpu_core = { path = "../core" }
+infinite_engines = { path = "../infinite_engines" }
+api_intercept = { path = "../api_intercept" }
+
+[[bench]]
+name = "infinite_flops_benchmark"
+harness = false
