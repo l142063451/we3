@@ -1,0 +1,118 @@
+# Rust
+target/
+Cargo.lock
+**/*.rs.bk
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# Poetry
+poetry.lock
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Documentation
+docs/_build/
+docs/build/
+
+# Benchmarks
+criterion/
+
+# Lean
+.lake/
+build/
+lake-manifest.json
+
+# Coq
+*.vo
+*.glob
+*.aux
+.coqdeps.d
+
+# Temporary files
+/tmp/
+*.tmp
+*.temp
+
+# Logs
+*.log
+logs/
+
+# Data files (unless specifically tracked)
+*.csv
+*.json
+*.pkl
+*.h5
+*.hdf5
+
+# Model files
+*.pt
+*.pth
+*.ckpt
+*.model
+
+# Experiments output
+experiments/output/
+experiments/results/
+
+# Artifacts
+artifacts/
+.artifacts/
+
+# Cache
+.cache/
+
+# Local configuration
+.env
+.env.local

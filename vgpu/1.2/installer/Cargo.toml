@@ -1,0 +1,24 @@
+[package]
+name = "vgpu_installer"
+version = "1.2.0"
+edition = "2021"
+description = "WE3 vGPU Multi-Platform Installer"
+
+[[bin]]
+name = "vgpu-install"
+path = "src/main.rs"
+
+[dependencies]
+vgpu_core = { path = "../core" }
+vgpu_api_intercept = { path = "../api_intercept" }
+tokio = { workspace = true }
+serde = { workspace = true }
+anyhow = { workspace = true }
+clap = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+serde_json = { workspace = true }
+serde_yaml = "0.9"
+
+[dev-dependencies]
+tempfile = "3.8"

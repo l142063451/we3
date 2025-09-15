@@ -1,0 +1,23 @@
+[package]
+name = "vgpu_api_intercept"
+version = "1.2.0"
+edition = "2021"
+description = "WE3 vGPU API Interception Layer - CUDA/OpenCL/Vulkan Interposer"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+vgpu_core = { path = "../core" }
+tokio = { workspace = true }
+serde = { workspace = true }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+dashmap = { workspace = true }
+parking_lot = { workspace = true }
+libloading = "0.8"
+once_cell = "1.19"
+
+[dev-dependencies]
+criterion = { workspace = true }

@@ -1,0 +1,69 @@
+[workspace]
+resolver = "2"
+members = [
+    "src/generating_functions",
+    "src/tensor_networks", 
+    "src/knowledge_compilation",
+    "src/idv_bits",
+    "src/god_index",
+    "src/hybrid_verifier",
+    "src/vgpu_shim",
+    "src/experimental_framework",
+    "src/formal_proofs",
+    "src/publication_prep",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["WE3 Research Team"]
+license = "MIT"
+repository = "https://github.com/l142063451/we3"
+
+[workspace.dependencies]
+# Core mathematical libraries
+num = "0.4"
+num-complex = { version = "0.4", features = ["serde"] }
+num-traits = "0.2"
+nalgebra = "0.32"
+ndarray = "0.15"
+approx = "0.5"
+
+# Performance and parallelization
+rayon = "1.8"
+crossbeam = "0.8"
+
+# Bit manipulation
+bitvec = "1.0"
+smallvec = "1.11"
+
+# Random number generation
+rand = "0.8"
+
+# Low-level math functions
+libm = "0.2"
+
+# Python bindings
+pyo3 = { version = "0.20", features = ["extension-module"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Testing
+proptest = "1.4"
+criterion = { version = "0.5", features = ["html_reports"] }
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[profile.bench]
+inherits = "release"
+debug = true

@@ -1,0 +1,9 @@
+[package]
+name = "vgpu-api-intercept-v14"
+version = "1.4.0"
+edition = "2021"
+description = "Enhanced API interception for vGPU v1.4+"
+
+[dependencies]
+tokio.workspace = true
+async-trait.workspace = true

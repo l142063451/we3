@@ -1,0 +1,31 @@
+[package]
+name = "vgpu_core"
+version = "1.2.0"
+edition = "2021"
+description = "WE3 Virtual GPU Core Framework - Advanced Mathematical Computing Engine"
+
+[dependencies]
+tokio = { workspace = true }
+serde = { workspace = true }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+uuid = { workspace = true }
+dashmap = { workspace = true }
+parking_lot = { workspace = true }
+rayon = { workspace = true }
+nalgebra = { workspace = true }
+ndarray = { workspace = true }
+num-complex = { workspace = true }
+rand = { workspace = true }
+chrono = { version = "0.4", features = ["serde"] }
+futures = "0.3"
+
+[dev-dependencies]
+criterion = { workspace = true }
+tokio-test = "0.4"
+
+# Comprehensive Test Configuration
+[[test]]
+name = "comprehensive_validation"
+path = "../tests/comprehensive_validation.rs"

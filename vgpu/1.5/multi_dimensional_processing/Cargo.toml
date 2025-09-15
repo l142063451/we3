@@ -1,0 +1,12 @@
+[package]
+name = "vgpu-multi-dimensional-processing"
+version = "1.5.0"
+edition = "2021"
+
+[dependencies]
+tokio = { workspace = true }
+async-trait = { workspace = true }
+nalgebra = { workspace = true }
+num-complex = { workspace = true }
+rayon = { workspace = true }
+thiserror = { workspace = true }

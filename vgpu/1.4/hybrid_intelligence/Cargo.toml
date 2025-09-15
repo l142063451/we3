@@ -1,0 +1,9 @@
+[package]
+name = "vgpu-hybrid-intelligence"
+version = "1.4.0"
+edition = "2021"
+description = "AI-enhanced mathematical reasoning"
+
+[dependencies]
+tokio.workspace = true
+async-trait.workspace = true

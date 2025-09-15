@@ -1,0 +1,36 @@
+[package]
+name = "vgpu-infinite-computing"
+version = "1.4.0"
+edition = "2021"
+description = "Advanced infinite computing engines for vGPU v1.4+"
+authors = ["vGPU Development Team"]
+
+[dependencies]
+tokio.workspace = true
+async-trait.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+rayon.workspace = true
+crossbeam.workspace = true
+parking_lot.workspace = true
+dashmap.workspace = true
+ndarray.workspace = true
+nalgebra.workspace = true
+rustfft.workspace = true
+statrs.workspace = true
+rand.workspace = true
+rand_distr.workspace = true
+num-complex.workspace = true
+num-traits.workspace = true
+num-bigint.workspace = true
+itertools.workspace = true
+regex.workspace = true
+petgraph.workspace = true
+bitvec.workspace = true
+
+[lib]
+name = "vgpu_infinite_computing"
+path = "src/lib.rs"
