@@ -22,6 +22,7 @@ crossbeam = "0.8"
 num-traits = "0.2"
 statrs = "0.16"
 num_cpus = "1.0"
+rand = { version = "0.8", features = ["std_rng"] }
 
 # WE3 framework dependencies
 generating_functions = { path = "../generating_functions" }

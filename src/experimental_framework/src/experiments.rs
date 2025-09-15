@@ -15,6 +15,7 @@ use chrono::{DateTime, Utc};
 use anyhow::Result;
 use tokio::sync::Semaphore;
 use std::sync::Arc;
+use rand::prelude::SliceRandom;
 
 /// WE3 Mathematical Framework identifier
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
@@ -196,7 +197,7 @@ pub struct ExperimentRunResult {
 }
 
 /// Execution status of a run
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum ExecutionStatus {
     Pending,
     Running,
