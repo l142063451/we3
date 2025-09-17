@@ -33,6 +33,7 @@ statrs = "0.16"
 itertools = "0.12"
 bitvec = "1.0"
 bytemuck = "1.0"
+num_cpus = "1.0"
 
 [profile.release]
 opt-level = 3

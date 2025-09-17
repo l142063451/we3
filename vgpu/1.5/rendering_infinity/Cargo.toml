@@ -9,3 +9,4 @@ async-trait = { workspace = true }
 nalgebra = { workspace = true }
 rayon = { workspace = true }
 thiserror = { workspace = true }
+num_cpus = { workspace = true }
