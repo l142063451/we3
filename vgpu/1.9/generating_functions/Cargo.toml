@@ -1,0 +1,28 @@
+[package]
+name = "generating_functions"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "High-performance generating functions engine for combinatorial analysis"
+
+[dependencies]
+num.workspace = true
+num-complex.workspace = true
+nalgebra.workspace = true
+serde.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true
+criterion.workspace = true
+approx.workspace = true
+
+[[bench]]
+name = "coefficient_extraction"
+harness = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
